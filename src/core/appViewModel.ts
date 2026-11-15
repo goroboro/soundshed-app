@@ -97,6 +97,7 @@ export class AppViewModel {
         ];
         let selectedMidiInput = null;
         let numPresetSlots = 4;
+        let youtubeApiKey = null;
         let settings = localStorage.getItem("settings");
         if (settings != null) {
             // settings to load
@@ -113,12 +114,17 @@ export class AppViewModel {
                 numPresetSlots = settingsParsed.numPresetSlots;
             }
 
+            if (settingsParsed.youtubeApiKey != null) {
+                youtubeApiKey = settingsParsed.youtubeApiKey;
+            }
+
         }
 
         AppStateStore.update(s => {
             s.inputEventMappings = mappings;
             s.selectedMidiInput = selectedMidiInput;
             s.numPresetSlots = numPresetSlots;
+            s.youtubeApiKey = youtubeApiKey;
         });
 
     }
@@ -130,7 +136,8 @@ export class AppViewModel {
         let settings = {
             selectedMidiInput: allSettings.selectedMidiInput,
             inputEventMappings: allSettings.inputEventMappings,
-            numPresetSlots: allSettings.numPresetSlots
+            numPresetSlots: allSettings.numPresetSlots,
+            youtubeApiKey: allSettings.youtubeApiKey
         };
 
         localStorage.setItem("settings", JSON.stringify(settings));

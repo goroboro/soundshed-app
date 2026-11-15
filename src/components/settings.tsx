@@ -97,7 +97,17 @@ const SettingsControl = () => {
   };
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [youtubeApiKey, setYoutubeApiKey] = React.useState(
+    () => AppStateStore.getRawState().youtubeApiKey || ""
+  );
 
+  const saveYoutubeApiKey = () => {
+    AppStateStore.update((s) => {
+      s.youtubeApiKey = youtubeApiKey.trim() || null;
+    });
+    appViewModel.saveSettings();
+  };
+  
   const renderInputEventMappings = () => {
     return inputEventMappings.map((mapping: InputEventMapping) => (
       <div key={mapping.id} className="mapping-row">
@@ -213,6 +223,49 @@ const SettingsControl = () => {
         ) : (
           <p className="settings-empty">No input mappings configured.</p>
         )}
+      </div>
+
+      {/* ── Video Search ── */}
+      <div className="settings-section glass-panel">
+        <div className="settings-section-header">
+          <div>
+            <h2 className="settings-section-title">Video Search</h2>
+            <p className="settings-section-desc">
+              Optional YouTube Data API v3 key for Jam backing-track search.
+              Leave empty to use the built-in key.
+            </p>
+          </div>
+        </div>
+
+        <div className="d-flex gap-2 align-items-center flex-wrap">
+          <input
+            type="text"
+            className="form-control youtube-key-input"
+            placeholder="AIza..."
+            value={youtubeApiKey}
+            onChange={(e) => setYoutubeApiKey(e.target.value)}
+            aria-label="YouTube Data API v3 key"
+          />
+          <button
+            type="button"
+            className="settings-btn settings-btn--accent"
+            onClick={saveYoutubeApiKey}
+          >
+            Save
+          </button>
+        </div>
+
+        <p className="settings-section-desc" style={{ marginTop: "0.5rem" }}>
+          You can create a key in the{" "}
+          <a
+            href="https://console.cloud.google.com/apis/credentials"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Google Cloud Console
+          </a>{" "}
+          (YouTube Data API v3). The key is stored only in this browser.
+        </p>
       </div>
 
       {enableTestMode && (

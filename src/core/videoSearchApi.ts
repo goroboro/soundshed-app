@@ -1,5 +1,6 @@
 import youtubeSearch from "youtube-search";
 import envSettings from "../env";
+import { AppStateStore } from "../stores/appstate";
 
 export interface VideoSearchResult {
     url: string;
@@ -16,9 +17,11 @@ export class VideoSearchApi {
 
     async search(query: string) {
 
+        // User-supplied key (Settings > Video Search) takes priority over
+        // the built-in key; read live so saved keys apply without a reload.
         var opts: youtubeSearch.YouTubeSearchOptions = {
             maxResults: 10,
-            key: envSettings.YoutubeAPIKey
+            key: AppStateStore.getRawState().youtubeApiKey || envSettings.YoutubeAPIKey
         };
 
         let results = await youtubeSearch(query, opts,);

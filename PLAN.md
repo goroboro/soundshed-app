@@ -89,6 +89,16 @@ Remaining Phase 1 items:
 - Full-screen mobile video player (`mobile-video-player.tsx`) to replace the
   draggable 640px PiP on phones (CSS containment is a stopgap for now).
 
+### Other (done 2026-07-22)
+
+- **User-supplied YouTube API key** (works on desktop + mobile): the built-in
+  key in `src/env.ts` is rejected, so Jam search failed. Settings > Video
+  Search now accepts an optional key (persisted in the existing localStorage
+  `settings` blob via AppStateStore), taking priority over the built-in key.
+  Touched: `appstate.ts` (+1 field), `appViewModel.ts` (load/save),
+  `videoSearchApi.ts` (key fallback), `settings.tsx` (section). Verified on
+  device: Jam search works with a user key.
+
 ### Phase 2 — Mobile-specific UX
 
 - Reorganise the amp page (the most complex screen: signal path, FX controls,

@@ -12,5 +12,6 @@ export const AppStateStore = new Store({
     isMidiInputAvailable: false,
     selectedMidiInput: null,
     lastMidiEvent:null,
-    numPresetSlots: 4
+    numPresetSlots: 4,
+    youtubeApiKey: null
 });
