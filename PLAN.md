@@ -33,6 +33,14 @@ the current UI is built desktop-first with only minimal responsiveness.
 - **Web Bluetooth only works in Chromium browsers** (Chrome/Edge on Android).
 - **iOS Safari has no Web Bluetooth**, so the Amp tab cannot connect at all
   on an iPhone; users would only get Home/Jam/Toolkit/Settings.
+- **Web Bluetooth also requires a secure context (HTTPS or localhost)** —
+  confirmed 2026-07-22: scanning failed from a phone over plain
+  `http://192.168.x.x` with "Bluetooth may not be switched on or the browser
+  or OS may not support Bluetooth" (device-selector.tsx fallback message),
+  and worked immediately once the same server was restarted with
+  `http-server --ssl` and a self-signed cert (after accepting the cert
+  warning). Consequence: any phone deployment of the web app (incl. PWA in
+  Phase 3) must be served over HTTPS.
 - There is an existing `AmpOfflineControl` fallback for non-native mode, but on
   iOS it should be a clear, informative state ("connecting to an amp requires a
   Chromium browser or the desktop app") rather than a scan that finds nothing.
