@@ -39,6 +39,7 @@ import SettingsControl from "./settings";
 import InputEventsControl from "./device/input-events";
 import ScalexControl from "./scalex";
 import MobileNav from "./mobile/mobile-nav";
+import MobileVideoPlayer from "./mobile/mobile-video-player";
 
 export const appViewModel: AppViewModel = new AppViewModel();
 export const deviceViewModel: DeviceViewModel = new DeviceViewModel();
@@ -253,7 +254,16 @@ const App = () => {
           ></LoginControl>
         ) : null}
 
-        {playingVideoUrl != null ? (
+        {playingVideoUrl != null && isMobile ? (
+          <MobileVideoPlayer
+            url={playingVideoUrl}
+            onClose={() => {
+              LessonStateStore.update((s) => {
+                s.playingVideoUrl = null;
+              });
+            }}
+          />
+        ) : playingVideoUrl != null ? (
           <Draggable nodeRef={videoNodeRef}>
             <div ref={videoNodeRef} className="pip-video-control">
               <div className="row">

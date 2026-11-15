@@ -188,17 +188,64 @@
         padding: 1rem 1.1rem;
     }
 
-    /* Video: contain the fixed-size player on small screens.
-       (Proper full-screen mobile player comes in a later phase;
-       this just stops the 640px player overflowing.) */
-    .pip-video-control {
-        max-width: 94vw;
-        overflow: hidden;
+    /* Full-screen mobile video player: replaces the draggable PiP
+       window, which is unusable on phones (fixed 640px window placed
+       at the viewport's horizontal middle, close button off-screen,
+       z-index above the tab bar). */
+    .mobile-video-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 200; /* above the mobile shell (100), below modals */
+        background: rgba(8,8,8,0.98);
+        display: flex;
+        flex-direction: column;
+        animation: fade-in-up 0.2s ease both;
     }
-    .pip-video-control .react-player {
-        width: 100% !important;
-        height: auto !important;
-        aspect-ratio: 16 / 9;
+    .mobile-video-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        padding-top: calc(0.5rem + env(safe-area-inset-top));
+        border-bottom: 1px solid var(--border);
+    }
+    .mobile-video-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .mobile-video-close {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px; /* comfortable tap target */
+        color: var(--text);
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .mobile-video-close:active {
+        border-color: var(--border-hover);
+    }
+    .mobile-video-body {
+        flex: 1;
+        min-height: 0;
+        padding: 0.25rem;
+        padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+    }
+    /* ReactPlayer's inner wrapper is absolutely positioned, so the
+       outer div needs a positioning context to contain it. */
+    .mobile-video-body .react-player {
+        position: relative;
+        width: 100%;
+        height: 100%;
     }
 
     /* Settings: let the mapping table scroll sideways if needed */
