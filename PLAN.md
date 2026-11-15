@@ -85,9 +85,10 @@ Done in chunk 1:
 - Verified: typecheck, build-web, 355 unit + 10 integration tests, headless
   Chrome screenshots (mobile home/settings, desktop unchanged).
 
-Remaining Phase 1 items:
-- Full-screen mobile video player (`mobile-video-player.tsx`) to replace the
-  draggable 640px PiP on phones (CSS containment is a stopgap for now).
+Done in Phase 1 follow-up (2026-07-22):
+- Full-screen mobile video player (`mobile-video-player.tsx`) replaces the
+  draggable PiP on phones (44px close button, tap-outside-to-close). The
+  PiP is unchanged on desktop. Verified on device.
 
 ### Other (done 2026-07-22)
 
@@ -112,13 +113,40 @@ Remaining Phase 1 items:
 ### Phase 3 — Feel like an app (optional)
 
 - **PWA:** manifest + service worker so the app can be installed to the home
-  screen, with an offline shell.
+  screen, with an offline shell. Works locally over self-signed HTTPS (cert
+  warning accepted once); Web Bluetooth survives installation on Android.
+  Note: service worker / installed app is bound to the origin, so a local
+  LAN deployment needs a static/DHCP-reserved IP for the server box.
 - Consider a **Capacitor** wrapper (the project already ships an Electron
   wrapper) if native app parity for iOS/Android is ever wanted — this is the
   only realistic route to BLE amp control on iOS.
 
+### Idea to explore later — self-host the web app on the Android phone
+
+The web build is a pure static SPA with no backend of its own (amp = Web
+Bluetooth, Jam = Google YouTube API, tone cloud = soundshed.com, state =
+localStorage), so it can run directly on the phone:
+
+1. Build on PC → copy `build/` to the phone (adb push / zip download).
+2. Serve locally on the phone: a Play Store folder-server app pointed at the
+   folder, or Termux (`pkg install nodejs && npx http-server build`).
+3. Open `http://localhost:8080` in Chrome.
+
+- **localhost is a secure context** by definition, so Web Bluetooth should
+  work over plain HTTP with no self-signed cert / expiry / IP churn. (Verify
+  Android Chrome accepts BLE from `http://localhost` — designed to, but
+  Android has had quirks.)
+- Gains: no PC needed, works off your LAN, no IP reservation.
+- Trade-offs: updates require re-pushing the build to the phone; Android
+  aggressively kills background processes, so the little server needs a
+  battery-optimization exemption or a Termux foreground wake-lock to stay up.
+- Cheap proof of concept: zip `build/`, get it on the phone, try a
+  folder-server app + `localhost` + a BLE scan.
+
 ## Suggested next steps
 
-1. Confirm the iOS/BLE stance (Phase 2 caveat above).
-2. Start Phase 1 — CSS + small `app.tsx` tweaks, no architectural changes.
-3. Validate on a phone (Android Chrome) and in devtools device mode.
+1. Phase 1 (shell + video player) and the YouTube key fix are done and
+   verified on device.
+2. Phase 2 — reorganise the amp page for phones; test the amp on a phone
+   first to see what feels cramped before designing the layout.
+3. Phase 3 (optional) — PWA, or explore the phone self-hosting idea above.
