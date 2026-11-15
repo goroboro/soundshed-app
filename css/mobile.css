@@ -1,0 +1,232 @@
+/* ============================================================
+   SOUNDSHED – Mobile overrides
+   Loaded after styles.css (see src/components/app.tsx).
+   All mobile-specific styles live here so they can be rebased
+   against upstream without touching the main stylesheet.
+   Keep the 900px breakpoint in sync with MOBILE_QUERY in
+   src/core/mobile.ts.
+   ============================================================ */
+
+:root {
+    --mobile-tabbar-h: 52px;
+}
+
+/* ── Mobile shell: top bar + bottom tab bar ─────────────────── */
+.mobile-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 1rem;
+    padding-top: calc(0.55rem + env(safe-area-inset-top));
+    background: rgba(12,12,12,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.mobile-topbar-brand {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+}
+
+.mobile-account-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 34px;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color var(--transition);
+}
+.mobile-account-btn:hover,
+.mobile-account-btn:active {
+    border-color: var(--border-hover);
+}
+.mobile-account-name {
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mobile-tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    height: calc(var(--mobile-tabbar-h) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(12,12,12,0.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+
+.mobile-tab {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition);
+    -webkit-tap-highlight-color: transparent;
+}
+.mobile-tab:active {
+    color: var(--text);
+}
+.mobile-tab.active {
+    color: var(--accent);
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+}
+
+.mobile-tab-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mobile-tab .status-dot {
+    position: absolute;
+    top: -3px;
+    right: -8px;
+    margin: 0;
+    width: 8px;
+    height: 8px;
+}
+
+.mobile-tab-label {
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* ── Mobile overrides ───────────────────────────────────────── */
+@media (max-width: 900px) {
+
+    /* Desktop nav is replaced by the mobile shell */
+    .magic-nav {
+        display: none;
+    }
+
+    /* Keep scrollable content clear of the fixed tab bar */
+    main {
+        padding-bottom: calc(var(--mobile-tabbar-h) + env(safe-area-inset-bottom) + 0.5rem);
+    }
+
+    .app-content-wrap {
+        padding: 0 0.75rem;
+    }
+
+    /* Page sections: tighter padding on small screens */
+    .home-intro,
+    .amp-intro,
+    .tones-intro,
+    .about-intro,
+    .settings-intro,
+    .lessons-intro {
+        padding: 1rem 0.25rem;
+    }
+
+    /* Headings scale down */
+    .home-hero {
+        padding: 1.5rem 0 1rem;
+    }
+    .home-hero h1 {
+        font-size: 1.9rem;
+    }
+    .home-hero .subtitle {
+        font-size: 0.88rem;
+    }
+    .jam-header {
+        padding: 1rem 0 0.5rem;
+    }
+    .jam-heading {
+        font-size: 1.6rem;
+    }
+    h1 { font-size: 1.25rem; }
+    h2 { font-size: 1.05rem; }
+
+    /* Home: drop the right image panel */
+    .home-right {
+        display: none;
+    }
+    .home-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        min-height: auto;
+    }
+
+    /* Magic cards: full width, slightly tighter */
+    .magic-card {
+        max-width: 100%;
+        padding: 1rem 1.1rem;
+    }
+
+    /* Video: contain the fixed-size player on small screens.
+       (Proper full-screen mobile player comes in a later phase;
+       this just stops the 640px player overflowing.) */
+    .pip-video-control {
+        max-width: 94vw;
+        overflow: hidden;
+    }
+    .pip-video-control .react-player {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+    }
+
+    /* Settings: let the mapping table scroll sideways if needed */
+    .mapping-table {
+        overflow-x: auto;
+    }
+
+    .mobile-settings-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 0.4rem 0.9rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text);
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+    .mobile-settings-link:hover,
+    .mobile-settings-link:active {
+        color: var(--accent);
+        border-color: var(--border-hover);
+    }
+
+    /* Touch friendliness: slightly larger tap targets */
+    .tone-btn,
+    .settings-btn {
+        min-height: 40px;
+    }
+}

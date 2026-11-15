@@ -1,12 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { MessageParsingTest } from "../core/tests/messageParsingTest";
 import { WebConnectionTest } from "../core/tests/webConnectionTest";
 import { Utils } from "../core/utils";
 import { InputEventMapping } from "../spork/src/interfaces/inputEventMapping";
 import { AppStateStore } from "../stores/appstate";
+import { useIsMobile } from "../core/mobile";
 import { appViewModel } from "./app";
 
 const SettingsControl = () => {
+  const isMobile = useIsMobile();
   const inputEventMappings = AppStateStore.useState(
     (s) => s.inputEventMappings
   );
@@ -221,6 +224,22 @@ const SettingsControl = () => {
           </div>
         </div>
       )}
+
+      {isMobile ? (
+        <div className="settings-section glass-panel">
+          <div className="settings-section-header">
+            <div>
+              <h2 className="settings-section-title">More</h2>
+              <p className="settings-section-desc">
+                Additional pages.
+              </p>
+            </div>
+          </div>
+          <Link to="/about" className="mobile-settings-link">
+            About
+          </Link>
+        </div>
+      ) : null}
 
     </div>
   );

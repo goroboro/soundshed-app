@@ -17,10 +17,12 @@ import {
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../css/styles.css";
+import "../../css/mobile.css";
 import AppViewModel from "../core/appViewModel";
 import DeviceViewModel from "../core/deviceViewModel";
 import { LessonManager } from "../core/lessonManager";
 import { Login, UserRegistration } from "../core/soundshedApi";
+import { useIsMobile } from "../core/mobile";
 import { AppStateStore } from "../stores/appstate";
 import { DeviceStateStore } from "../stores/devicestate";
 import { LessonStateStore } from "../stores/lessonstate";
@@ -36,6 +38,7 @@ import LoginControl from "./soundshed/login";
 import SettingsControl from "./settings";
 import InputEventsControl from "./device/input-events";
 import ScalexControl from "./scalex";
+import MobileNav from "./mobile/mobile-nav";
 
 export const appViewModel: AppViewModel = new AppViewModel();
 export const deviceViewModel: DeviceViewModel = new DeviceViewModel();
@@ -46,6 +49,7 @@ export const AppViewModelContext = React.createContext(appViewModel);
 export const DeviceViewModelContext = React.createContext(deviceViewModel);
 
 const App = () => {
+  const isMobile = useIsMobile();
   const isNativeMode = AppStateStore.useState((s) => s.isNativeMode);
   const isUserSignedIn = AppStateStore.useState((s) => s.isUserSignedIn);
 
@@ -135,6 +139,17 @@ const App = () => {
 
   return (
     <main>
+      {isMobile ? (
+        <MobileNav
+          isConnected={isConnected}
+          enableSoundshedLogin={enableSoundshedLogin}
+          isUserSignedIn={isUserSignedIn}
+          userName={userInfo?.name}
+          onRequireSignIn={requireSignIn}
+          onSignOut={performSignOut}
+        />
+      ) : null}
+
       <nav className="magic-nav" aria-label="Main navigation">
         <ul style={{listStyle:"none", padding:0, margin:0, display:"contents"}}>
           <li className="nav-item">
